@@ -76,14 +76,25 @@ class GridViewController : UIViewController {
         let height_Of_Screen = UIScreen.main.bounds.size.height - height_Of_NavigationBar! 
         let height_Of_Button = CGFloat(100.0)
         
+        var width_Of_Screen = UIScreen.main.bounds.size.width
+        var initial_X = CGFloat(0.0)
+        if (UIDevice.current.userInterfaceIdiom == .phone) {
+            if ((UIScreen.main.bounds.width * UIScreen.main.scale) >= 2436) {
+                width_Of_Screen = width_Of_Screen - (44.0 * 2)
+                initial_X = CGFloat(44.0)
+            }
+        }
+        
+        
+        
         for col in 0...(Int(column!) - 1) {
-            let containerView = UIView.init(frame: CGRect(x: CGFloat(col) * (UIScreen.main.bounds.size.width/column!), y :0 + height_Of_NavigationBar! , width: UIScreen.main.bounds.size.width/column!, height:height_Of_Screen))
+            let containerView = UIView.init(frame: CGRect(x: CGFloat(col) * (width_Of_Screen/column!) + initial_X, y :0 + height_Of_NavigationBar! , width: width_Of_Screen/column!, height:height_Of_Screen))
             
             self.view.addSubview(containerView)
             
             var myViewArray = Array<MyView>()
             for ro in 0...(Int(row!) - 1){
-                let myView = MyView.init(frame: CGRect(x: 0, y: CGFloat(ro) * (((height_Of_Screen - height_Of_Button) / row!))  , width: UIScreen.main.bounds.size.width/column!, height: ((height_Of_Screen - height_Of_Button) / row!) ))
+                let myView = MyView.init(frame: CGRect(x: 0, y: CGFloat(ro) * (((height_Of_Screen - height_Of_Button) / row!))  , width: width_Of_Screen/column!, height: ((height_Of_Screen - height_Of_Button) / row!) ))
                 myView.upView.backgroundColor = colorArray![ro][1]
                 myView.downView.backgroundColor = colorArray![ro][0]
                 myView.randomLabel.isHidden = true
@@ -92,7 +103,7 @@ class GridViewController : UIViewController {
                 myViewArray.append(myView)
             }
 
-            let myButtonView = MyButtonView.init(frame: CGRect(x: 0, y: height_Of_Screen - height_Of_Button , width: UIScreen.main.bounds.size.width/column!, height:  height_Of_Button ))
+            let myButtonView = MyButtonView.init(frame: CGRect(x: 0, y: height_Of_Screen - height_Of_Button , width: width_Of_Screen/column!, height:  height_Of_Button ))
             setButtonStyle(button: myButtonView.confirmBtn)
             myButtonView.confirmBtn.tag = col
             myButtonView.confirmBtn.addTarget(self, action: #selector(confirmBtn_Clicked(_:)), for: .touchUpInside)
